@@ -1,7 +1,7 @@
 import os
 import xlsxwriter
-import linecache as lc
 from collections import Counter
+
 
 # TODO run the following: pip install xlsxwriter
 # TODO iterate through text files
@@ -14,13 +14,16 @@ def print_txt(single_file):
     pessoas = []
     with open(single_file, encoding="utf8") as f:
         my_list = [line.rstrip('\n') for line in f]
-        print(my_list)
+        # print(my_list)
         for line in my_list:
             if line == '' or line == '\n':
                 my_list.remove('')
             if not line.split(":")[0].isnumeric() or line.split(":")[0] == '':
                 pessoas.append(line.split(":")[0])
-        print(list(dict.fromkeys(pessoas)))
+        persons_dict = Counter(pessoas)
+        print(persons_dict)
+
+        # print(list(dict.fromkeys(pessoas)))
 
 
 def iterate_through_txts():
