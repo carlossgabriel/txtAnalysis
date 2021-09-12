@@ -1,7 +1,10 @@
 import os
+
+import spacy
 import xlsxwriter
 from collections import Counter
 
+nlp = spacy.load('pt')
 
 # TODO run the following: pip install xlsxwriter
 # TODO iterate through text files
@@ -18,12 +21,10 @@ def print_txt(single_file):
         for line in my_list:
             if line == '' or line == '\n':
                 my_list.remove('')
-            if not line.split(":")[0].isnumeric() or line.split(":")[0] == '':
+            if ':' in line and (not line.split(":")[0].isnumeric() or line.split(":")[0] == ''):
                 pessoas.append(line.split(":")[0])
         persons_dict = Counter(pessoas)
-        print(persons_dict)
-
-        # print(list(dict.fromkeys(pessoas)))
+        return persons_dict.items()
 
 
 def iterate_through_txts():
@@ -32,9 +33,13 @@ def iterate_through_txts():
     for singleFile in os.scandir(directory):
         date = str(singleFile).split("(")[1].split(" ")[0]
         worksheet = workbook.add_worksheet(str(date))
-        worksheet.write(0, 0, "name")
-        worksheet.write(0, 1, 'count')
-        print_txt(singleFile)
+        worksheet.write(0, 0, "NAME")
+        worksheet.write(0, 1, 'COUNT')
+        result = print_txt(singleFile)
+        for index, value in enumerate(result, start=2):
+            # x, y, data[0]=key, data=[1]=value
+            worksheet.write('A'+str(index), value[0])
+            worksheet.write('B'+str(index), value[1])
     workbook.close()
 
 
